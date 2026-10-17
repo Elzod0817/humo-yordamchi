@@ -8,6 +8,21 @@ const badWords = require('./words.js');
 
 bot.start((ctx) => ctx.reply('Assalomu alaykum! Men guruh nazoratchisiman. Meni guruhga qo\'shing va admin qiling.'));
 
+bot.on('new_chat_members', async (ctx) => {
+    const newMembers = ctx.message.new_chat_members;
+    for (const member of newMembers) {
+        // Agar guruhga botning o'zi qo'shilsa, o'ziga-o'zi xabar yozmasligi uchun
+        if (member.id === ctx.botInfo.id) continue;
+        
+        // Yangi a'zoga ismini belgilab murojaat qilish
+        const welcomeMsg = await ctx.reply(`Assalomu alaykum, [${member.first_name}](tg://user?id=${member.id})! Humo Logistics guruhiga xush kelibsiz.\n\n⚠️ Iltimos, qoidalarga rioya qiling. Guruhda reklama havolalari va haqoratli so'zlar avtomatik o'chiriladi.`, { parse_mode: 'Markdown' });
+        
+        // Yangi a'zolar ko'paysa guruh chatini to'ldirib yubormaslik uchun bu xabarni 30 soniyadan keyin avtomatik o'chiramiz
+        setTimeout(() => {
+            ctx.deleteMessage(welcomeMsg.message_id).catch(() => {});
+        }, 30000);
+    }
+});
 bot.on('message', async (ctx) => {
     // Agar xabar matn bo'lmasa, uni tekshirib o'tirmaymiz
     if (!ctx.message.text) return; 
