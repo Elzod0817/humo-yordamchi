@@ -59,3 +59,5 @@ bot.launch().then(() => {
 // Xatoliklarni ushlab qolish uchun
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+const http = require('http');
+http.createServer((req, res) => res.end('Bot ishlayapti')).listen(process.env.PORT || 8080);
